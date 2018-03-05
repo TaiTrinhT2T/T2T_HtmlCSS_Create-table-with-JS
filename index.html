@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>Test table with JS</title>
+    <link rel="stylesheet" href="CSS/MyCss.css" />
+    <script src="Js/jquery.min.js"></script>
+</head>
+<body>
+	<body>
+        <div id="detailStudent"></div>
+        <!-- <div id="" -->
+        <div>
+            <input type="checkbox" name="vehicle" value="true" checked="true" onclick="monChuaDat()">Môn chưa đạt
+            &emsp;&emsp;&emsp;
+            Tìm kiếm theo điểm
+            <select id="searchByMark">
+              <option value="1"> >=8 </option>
+              <option value="2"> <8 và >=6 </option>
+              <option value="3"> <6 và >= 4 </option>
+              <option value="4"> <=4 </option>
+              <option value="5"> All </option>
+            </select>
+        </div>
+        <table id="markStudent">
+        </table>
+    </body>
+    <script>
+
+            var jsonSectionStudy ;
+            jsonSectionStudy = {
+                "name":"Nguyen Van A",
+                "age": 22,
+                "sectionStudy":[  
+                    { "semester":"2017-2018", "codeClassName":"A001", "indicatorNumber"   : 3, "markInNumber"  : 8.4, "markInText" : "B+"},
+                    { "semester":"2017-2018", "codeClassName":"A002", "indicatorNumber"   : 3, "markInNumber"  : 7.5, "markInText" : "B"},
+                    { "semester":"2017-2018", "codeClassName":"A003", "indicatorNumber"   : 3, "markInNumber"  : 5.7, "markInText" : "C"},
+                    { "semester":"2017-2018", "codeClassName":"A004", "indicatorNumber"   : 3, "markInNumber"  : 3.5, "markInText" : "F"},
+                    { "semester":"2017-2018", "codeClassName":"A005", "indicatorNumber"   : 3, "markInNumber"  : 9.4, "markInText" : "B+"},
+                    { "semester":"2017-2018", "codeClassName":"A006", "indicatorNumber"   : 3, "markInNumber"  : 6.5, "markInText" : "B"},
+                    { "semester":"2017-2018", "codeClassName":"A007", "indicatorNumber"   : 3, "markInNumber"  : 2.7, "markInText" : "C"},
+                    { "semester":"2017-2018", "codeClassName":"A008", "indicatorNumber"   : 3, "markInNumber"  : 7.5, "markInText" : "F"},
+                ]  
+            }
+
+            function drawTable(data) {
+                $("#markStudent tr").remove(); 
+                var row = $("<tr />");
+                $("#markStudent").append(row);
+                row.append($("<th>Học Kỳ</th>"));
+                row.append($("<th>Mã môn học</th>"));
+                row.append($("<th>Số tín chỉ</th>"));
+                row.append($("<th>Điểm số</th>"));
+                row.append($("<th>Điểm chữ</th>"));
+
+                for (var i = 0; i < data.length; i++) {
+                    drawRow(data[i]);
+                }
+            }
+
+            function drawRow(rowData) {
+                var row = $("<tr />");
+                $("#markStudent").append(row);
+                row.append($("<td>" + rowData.semester + "</td>"));
+                row.append($("<td>" + rowData.codeClassName + "</td>"));
+                row.append($("<td>" + rowData.indicatorNumber + "</td>"));
+                if(rowData.markInNumber > 8 || rowData.markInNumber == 8){
+                    row.append($("<td class='green'>" + rowData.markInNumber + "</td>"));
+                    row.append($("<td class='green'>" + rowData.markInText + "</td>"));
+                } else if ( rowData.markInNumber > 6.5 || rowData.markInNumber == 6.5) {
+                    row.append($("<td class='blue'>" + rowData.markInNumber + "</td>"));
+                    row.append($("<td class='blue'>" + rowData.markInText + "</td>"));
+                } else if ( rowData.markInNumber > 4 || rowData.markInNumber == 4) {
+                    row.append($("<td>" + rowData.markInNumber + "</td>"));
+                    row.append($("<td>" + rowData.markInText + "</td>"));
+                } else {
+                    row.append($("<td class='red'>" + rowData.markInNumber + "</td>"));
+                    row.append($("<td class='red'>" + rowData.markInText + "</td>"));
+                }
+            }
+
+            function monChuaDat(){
+                var jsonMonChuaDat = [];
+                var valueChecked = $("input[type='checkbox']").val();
+
+                var checkbox = $("input[type='checkbox']");
+                checkbox.val( checkbox[0].checked ? "true" : "false" );
+
+                if(valueChecked == "false"){
+                    drawTable(jsonSectionStudy.sectionStudy);
+                } else {
+                    var data = jsonSectionStudy.sectionStudy;
+                    var lent = data.length;
+                    for (var i = 0; i < lent; i++) {
+                        var item = data[i];
+                        if(item.markInNumber > 4){
+                            jsonMonChuaDat.push(item);
+                        }
+                    }
+
+                    drawTable(jsonMonChuaDat);
+                }
+            }
+
+            (function(){
+               $('#searchByMark').change(function(){
+                    var jsonMon = [];
+                    var data = jsonSectionStudy.sectionStudy;
+                    var lent = data.length;
+                    var value = $(this).val();
+                    if(value == "1"){
+                        for (var i = 0; i < lent; i++) {
+                            var item = data[i];
+                            if(item.markInNumber > 8 || item.markInNumber == 8){
+                                jsonMon.push(item);
+                            }
+                        }
+                        drawTable(jsonMon);
+                    } else if (value == "2") {
+                        for (var i = 0; i < lent; i++) {
+                            var item = data[i];
+                            if(item.markInNumber < 8 && (item.markInNumber > 6 || item.markInNumber == 6)){
+                                jsonMon.push(item);
+                            }
+                        }
+                        drawTable(jsonMon);
+                    } else if (value == "3") {
+                        for (var i = 0; i < lent; i++) {
+                            var item = data[i];
+                            if( item.markInNumber < 6 && (item.markInNumber > 4 || item.markInNumber == 4)){
+                                jsonMon.push(item);
+                            }
+                        }
+                        drawTable(jsonMon);
+                    } else if (value == "4") {
+                        for (var i = 0; i < lent; i++) {
+                            var item = data[i];
+                            if(item.markInNumber < 4){
+                                jsonMon.push(item);
+                            }
+                        }
+                        drawTable(jsonMon);
+                    } else {
+                        drawTable(jsonSectionStudy.sectionStudy);
+                    }
+                });
+            })();
+
+
+
+            $(document).ready(function(){
+                $("#detailStudent").append("<h1>"+jsonSectionStudy.name+"</h1>");
+                drawTable(jsonSectionStudy.sectionStudy);
+            });
+        </script>
+</html>

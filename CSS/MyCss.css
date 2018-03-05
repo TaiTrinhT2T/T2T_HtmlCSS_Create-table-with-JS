@@ -1,0 +1,28 @@
+table {
+  border: 1px solid #666;   
+    width: 100%;
+}
+th {
+  background: #f8f8f8; 
+  font-weight: bold;    
+    padding: 2px;
+}
+
+td {
+	text-align: center;
+}
+
+.red {
+	color: red;
+	font-weight: bold;
+}
+
+.green {
+	color: #006400;
+	font-weight: bold;
+}
+
+.blue {
+	color: #00008B;
+	font-weight: bold;
+}
